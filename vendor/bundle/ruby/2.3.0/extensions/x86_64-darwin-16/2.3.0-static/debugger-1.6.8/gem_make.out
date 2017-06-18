@@ -1,0 +1,33 @@
+current directory: /Users/matthew/work/acton/vendor/bundle/ruby/2.3.0/gems/debugger-1.6.8/ext/ruby_debug
+/Users/matthew/.rbenv/versions/2.3.4/bin/ruby -r ./siteconf20170618-34850-uw178h.rb extconf.rb
+*** extconf.rb failed ***
+Could not create Makefile due to some reason, probably lack of necessary
+libraries and/or headers.  Check the mkmf.log file for more details.  You may
+need configuration options.
+
+Provided configuration options:
+	--with-opt-dir
+	--without-opt-dir
+	--with-opt-include
+	--without-opt-include=${opt-dir}/include
+	--with-opt-lib
+	--without-opt-lib=${opt-dir}/lib
+	--with-make-prog
+	--without-make-prog
+	--srcdir=.
+	--curdir
+	--ruby=/Users/matthew/.rbenv/versions/2.3.4/bin/$(RUBY_BASE_NAME)
+/Users/matthew/.rbenv/versions/2.3.4/lib/ruby/2.3.0/fileutils.rb:1393:in `initialize': No such file or directory @ rb_sysopen - ./234/ruby_debug.h (Errno::ENOENT)
+	from /Users/matthew/.rbenv/versions/2.3.4/lib/ruby/2.3.0/fileutils.rb:1393:in `open'
+	from /Users/matthew/.rbenv/versions/2.3.4/lib/ruby/2.3.0/fileutils.rb:1393:in `copy_file'
+	from /Users/matthew/.rbenv/versions/2.3.4/lib/ruby/2.3.0/fileutils.rb:487:in `copy_file'
+	from /Users/matthew/.rbenv/versions/2.3.4/lib/ruby/2.3.0/fileutils.rb:404:in `block in cp'
+	from /Users/matthew/.rbenv/versions/2.3.4/lib/ruby/2.3.0/fileutils.rb:1572:in `block in fu_each_src_dest'
+	from /Users/matthew/.rbenv/versions/2.3.4/lib/ruby/2.3.0/fileutils.rb:1586:in `fu_each_src_dest0'
+	from /Users/matthew/.rbenv/versions/2.3.4/lib/ruby/2.3.0/fileutils.rb:1570:in `fu_each_src_dest'
+	from /Users/matthew/.rbenv/versions/2.3.4/lib/ruby/2.3.0/fileutils.rb:403:in `cp'
+	from extconf.rb:83:in `block in <main>'
+	from extconf.rb:82:in `each'
+	from extconf.rb:82:in `<main>'
+
+extconf failed, exit code 1

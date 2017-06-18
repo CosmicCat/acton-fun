@@ -1,0 +1,3 @@
+class Redactor
+
+end

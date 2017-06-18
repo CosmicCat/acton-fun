@@ -1,0 +1,19 @@
+############# SETTING UP THE ENVIRONMENT ###############
+
+I've run this on a mac - specific instructions are mac related
+
+# install rbenv (ruby version manager)
+brew update
+brew install rbenv
+# set up rbenv in the shell - gives instructions about line to put in .profile
+rbenv init
+
+cd /to/your/clone
+
+# clone the git repo
+git clone XXXXXX
+
+# install specific verision of ruby using rbenv (.ruby-version file determines this)
+rbenv install
+# 
+# install bundler gem for your specific ruby version 
