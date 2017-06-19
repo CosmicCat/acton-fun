@@ -7,13 +7,13 @@ module Problem2
 
     def redact(log_line)
       if should_redact?(log_line)
-        return perform_redaction(log_line)
+        return UpdateCreateTokenizer.new(log_line).redact(fields_to_redact)
       end
       return log_line
     end
 
     def perform_redaction(log_line)
-
+      UpdateCreateTokenizer.new(log_line).redact
     end
 
     def should_redact?(log_line)
@@ -29,7 +29,6 @@ module Problem2
     def contains_dirty_fields?(log_line)
       fields_with_equals = fields_to_redact.map {|f| "#{f}="}
       regex = "(#{fields_with_equals.join("|")})"
-      puts regex
       log_line.match(/#{regex}/)
     end
 

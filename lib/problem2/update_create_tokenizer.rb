@@ -7,6 +7,10 @@ module Problem2
       @log_line = log_line
       init_fields
     end
+
+    def to_s
+      @log_line
+    end
     
     def init_fields
       fields_snippet = log_line.gsub(/^.* Fields: /, '')
@@ -15,8 +19,15 @@ module Problem2
     end
 
     def rewrite_field(fieldname, new_value)
-      # ERROR CHECKING
+      # BUG - ERROR CHECKING HERE
       @log_line = @log_line.gsub(/#{fieldname}=\".*?\"/, "#{fieldname}=\"#{new_value}\"")
+    end
+
+    def redact(fields_to_redact)
+      fields_to_redact.each do |fieldname|
+        rewrite_field(fieldname, 'XXX-REDACTED-XXX')
+      end
+      log_line
     end
     
   end
