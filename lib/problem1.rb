@@ -43,4 +43,5 @@ module Problem1
   
 end
 
-Problem1::PermutationsCli.start(ARGV)
+# FIXME - messy test output
+# Problem1::PermutationsCli.start(ARGV)
