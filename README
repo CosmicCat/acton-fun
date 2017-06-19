@@ -16,4 +16,9 @@ git clone XXXXXX
 # install specific verision of ruby using rbenv (.ruby-version file determines this)
 rbenv install
 # 
-# install bundler gem for your specific ruby version 
+# install bundler gem for your specific ruby version
+
+## BUGS ##
+
+* might not deal well with all audit log formats, contents. String parsing can be improved upon.
+* needs more detection for failures here ^^^^
