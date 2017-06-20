@@ -101,7 +101,7 @@ RSpec.describe Problem2::FileHandler do
   it "handles the example input appropriately" do
     h = Problem2::FileHandler.new(TEST_PATH)
     h.redact_files
-    redacted_contents = `gzcat #{OUTPUT_PATH}/test.log.gz`
+    redacted_contents = `zcat < #{OUTPUT_PATH}/test.log.gz`
     expect(redacted_contents).to eq(<<HERE)
 2016-12-11 21:59:37 Account: 1783 Added record: 42153 Fields: Content="Informational Pamphlet", Title="Eggs: Where to put them all?", Industry="Basket weaving", FirstName="Fred", LastName="Flintstone"
 2016-12-11 22:03:07 Account: 1783 Updated Record: 22533 Fields: Content="Bulletin", Title="Nonsense News", Industry="Technology", FirstName="Fred", LastName="Flintstone"

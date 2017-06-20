@@ -1,4 +1,5 @@
-require "pathname"
+#!/usr/bin/env ruby
+
 require "logger"
 require "thor"
 
@@ -135,7 +136,7 @@ module Problem2
     end
 
     def unpack_infile_into_temp_dir(path)
-      shell_command("gzcat #{path} > #{temp_in}")
+      shell_command("zcat < #{path} > #{temp_in}")
     end
 
     def pack_redaction_into_redaction_dir(filename)
@@ -189,7 +190,6 @@ module Problem2
   class RedactionCli < Thor
     desc "redaction -p INPUT_PATH", "Redact CC and SSN from all audit logs in given directory"
     option :path, :required => true, :aliases => :p, :desc => 'path to directory of gzipped logfiles'
-    option :ignore, :aliases => :i, :desc => "filter dupes on output"
     def redact()
       p = Problem2::FileHandler.new(options[:path])
       p.redact_files

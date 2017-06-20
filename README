@@ -1,3 +1,15 @@
+############ job application devops coding project
+
+########## Files ###############
+requirements.txt
+
+############ BUGS/ANNOYANCES ###############
+
+* might not deal well with all audit log formats, contents. String parsing can be improved upon.
+* needs more detection for failures here ^^^^
+* does not deal with multiple redaction runs, requires manual blowing away old working directory
+
+
 ############# SETTING UP THE ENVIRONMENT ###############
 
 I've run this on a mac - specific instructions are mac related
@@ -15,10 +27,96 @@ git clone XXXXXX
 
 # install specific verision of ruby using rbenv (.ruby-version file determines this)
 rbenv install
-# 
+#
 # install bundler gem for your specific ruby version
 
-## BUGS ##
+########
+
+############### Instalation #####################
+# tested on ubuntu16 + ruby 2.3.4
+
+## Install chef on target system
+curl -L https://omnitruck.chef.io/install.sh | sudo bash
+
+## Install Ruby on target system
+## VERSION: ############ job application devops coding project
+
+########## Files ###############
+requirements.txt
+
+############ BUGS ###############
 
 * might not deal well with all audit log formats, contents. String parsing can be improved upon.
 * needs more detection for failures here ^^^^
+
+
+############# SETTING UP THE ENVIRONMENT ###############
+
+I've run this on a mac - specific instructions are mac related
+
+# install rbenv (ruby version manager)
+brew update
+brew install rbenv
+# set up rbenv in the shell - gives instructions about line to put in .profile
+rbenv init
+
+cd /to/your/clone
+
+# clone the git repo
+git clone XXXXXX
+
+# install specific verision of ruby using rbenv (.ruby-version file determines this)
+rbenv install
+#
+# install bundler gem for your specific ruby version
+bundle
+
+######## Testing ##############
+## unit tests
+# run rspec
+
+
+############### Instalation #####################
+## tested on ubuntu16 aws instance
+## run as root on target machine
+## instance was stood up using this:
+# https://github.com/CosmicCat/hashicorp-research
+## needs badly to be ansible
+
+## Install Ruby/rbenv on target system
+## Version: 2.3.4
+# follow this, stopping after ruby/rbenv are installed and you can 'ruby -v' at the console as root
+https://www.digitalocean.com/community/tutorials/how-to-install-ruby-on-rails-with-rbenv-on-ubuntu-16-04
+
+## Gems
+gem install thor
+
+## Install problem1, problem2 scripts
+# run this locally from checkout
+
+# YUCK - insecure semi-hack to be able to scp to /usr/local/bin
+# don't do this at home kids
+chmod 777 /usr/local/bin
+
+# copy over the ruby scripts
+# run this locally from checkout
+scp lib/problem1.rb ubuntu@34.211.138.60:/usr/local/bin/problem1
+scp lib/problem2.rb ubuntu@34.211.138.60:/usr/local/bin/problem2
+
+# copy over the test files
+
+## Ugh, change permissions
+chmod 755 /usr/local/bin/problem1
+chmod 755 /usr/local/bin/problem2
+
+# undo insecure hack
+chmod 700 /usr/local/bin
+
+## Test
+root@ip-10-0-1-63:~# ./problem1 permutations --string 123
+123
+...
+root@ip-10-0-1-63:~# problem2 redact --path .
+root@ip-10-0-1-63:~# zcat redactions/test.log.gz
+2016-12-11 21:59:37 Account: 1783 Added record: 42153 Fields: Content="Informational Pamphlet", Title="Eggs: Where to put them all?", Industry="Basket weaving", FirstName="Fred", LastName="Flintstone"
+...
