@@ -1,54 +1,59 @@
 ############ job application devops coding project
+# ruby - ubuntu16
 
 ########## Files ###############
-requirements.txt
+* requirements.txt - list of asks
+* /lib/problem1.rb - problem1 solution script
+* /lib/problem2.rb - problem2 solution script
+* /spec - tests
+* /test - some test data
+
+################ THOUGHTS ##################
+
+Hello all - I've enjoyed working on these problems. This README contains enough information to
+run and install the solutions. I have chosen ruby as my programming language due to my proficiency.
+Testing was done on my mac as well as an ubuntu16 target machine in AWS.
+
+I've kept the code minimal and hopefully kept out a lot of ruby magic. Tests are simple for understandability,
+and were used in the development of the code.
+
+For ease of deployment, the solution code and classes are wrapped up into single scripts. Not too manageable if this code grows. Future iterations of this project might warrant turing it into a ruby Gem. In the real world I would have folded it into the devops tool CD pipeline.
+
+##### Problem 1:
+Borrowed the algorithm from here:
+http://www.geeksforgeeks.org/write-a-c-program-to-print-all-permutations-of-a-given-string/
+
+Made it more ruby. Simplicity was my chief goal.
+
+##### Problem 2 - design/caveats:
+
+The solution takes a directory name as input and finds all *.gz files in that directory. Slight code modification to
+make it digest any files that don't fit that input pattern.
+
+The solution produces a redacted copy of every file it is able to process. It does not blow away the old files.
+
+New logs with redactions are stored in the redactions folder. The audit log is redactions/redaction.log.
+
+Big risks to resource consumption are operations that have the potential to pull large files into memory.
+Parsing of files was designed to not consume memory via processing line by line. The log is written to on
+the fly. Zipping and unzipping happen via shell calls and well-used tools. This program has the potential to
+flood a disk with activity and gzip operations have the potential to consume cpu. Recommend moving or copying
+the input logfiles files to a disk not currently hosting production data to prevent io exhaustion.
+
+############# REGRETS ################
+
+There is no automated method for deployment to the target machine. The steps are well documented. I didn't budget much
+time for this as I assumed chef. I later realized that installing barebones ruby/chef on target is no longer recommendable by me.
+I would recommend using ansible for this, but my ansible is stale enough for that to take much more time to script it rather
+than just running the not-too-tedious steps. In the real world I would ask the team if this was acceptable solution to the
+problem given the number of nodes these tools need to be on. If it needed to be run in more than 2 places, I would ask for
+a two hour pair with a teammate to fully automate the deployment.
 
 ############ BUGS/ANNOYANCES ###############
 
-* might not deal well with all audit log formats, contents. String parsing can be improved upon.
+* might not play well with all audit log formats, contents. String parsing can be improved upon.
 * needs more detection for failures here ^^^^
 * does not deal with multiple redaction runs, requires manual blowing away old working directory
-
-
-############# SETTING UP THE ENVIRONMENT ###############
-
-I've run this on a mac - specific instructions are mac related
-
-# install rbenv (ruby version manager)
-brew update
-brew install rbenv
-# set up rbenv in the shell - gives instructions about line to put in .profile
-rbenv init
-
-cd /to/your/clone
-
-# clone the git repo
-git clone XXXXXX
-
-# install specific verision of ruby using rbenv (.ruby-version file determines this)
-rbenv install
-#
-# install bundler gem for your specific ruby version
-
-########
-
-############### Instalation #####################
-# tested on ubuntu16 + ruby 2.3.4
-
-## Install chef on target system
-curl -L https://omnitruck.chef.io/install.sh | sudo bash
-
-## Install Ruby on target system
-## VERSION: ############ job application devops coding project
-
-########## Files ###############
-requirements.txt
-
-############ BUGS ###############
-
-* might not deal well with all audit log formats, contents. String parsing can be improved upon.
-* needs more detection for failures here ^^^^
-
 
 ############# SETTING UP THE ENVIRONMENT ###############
 
@@ -74,11 +79,16 @@ bundle
 ######## Testing ##############
 ## unit tests
 # run rspec
+cosmic:acton matthew$ rspec
+
+...
+Finished in 0.07904 seconds (files took 0.11173 seconds to load)
+18 examples, 0 failures
 
 
-############### Instalation #####################
+############### Instalation to Target machine #####################
 ## tested on ubuntu16 aws instance
-## run as root on target machine
+## run most commands as root on target machine
 ## instance was stood up using this:
 # https://github.com/CosmicCat/hashicorp-research
 ## needs badly to be ansible
@@ -88,26 +98,22 @@ bundle
 # follow this, stopping after ruby/rbenv are installed and you can 'ruby -v' at the console as root
 https://www.digitalocean.com/community/tutorials/how-to-install-ruby-on-rails-with-rbenv-on-ubuntu-16-04
 
-## Gems
+## system gems
 gem install thor
 
 ## Install problem1, problem2 scripts
 # run this locally from checkout
 
 # YUCK - insecure semi-hack to be able to scp to /usr/local/bin
-# don't do this at home kids
+# don't do this at home kids and remember to undo it down below.
 chmod 777 /usr/local/bin
 
 # copy over the ruby scripts
 # run this locally from checkout
 scp lib/problem1.rb ubuntu@34.211.138.60:/usr/local/bin/problem1
 scp lib/problem2.rb ubuntu@34.211.138.60:/usr/local/bin/problem2
-
 # copy over the test files
-
-## Ugh, change permissions
-chmod 755 /usr/local/bin/problem1
-chmod 755 /usr/local/bin/problem2
+scp test/test.log.gz ubuntu@34.211.138.60:/root/test.log.gz
 
 # undo insecure hack
 chmod 700 /usr/local/bin
