@@ -38,7 +38,7 @@ Example Data: Lines containing social security numbers and credit card numbers s
 2016-12-11 22:23:25 Account: 3618 Deleted record: 78721
 2016-12-11 22:27:37 Account: 1783 Added record: 44114 Fields: Content="Newsletter", Title="Froglegs Weekly", Industry="Food service", FirstName="Fred", LastName="Flintstone"
 2016-12-11 22:33:13 Account: 3618 Updated Record: 77807 Fields: Content="Newsletter", Title="Froglegs Weekly", Industry="Food service", FirstName="Fred", LastName="Flintstone"
-2016-12-11 22:35:19 Account: 3618 Updated Record: 23174 Fields: Content="Payment", Type="Mortgage", Industry="Finance", FirstName="Fred", LastName="Flintstone", SSN="620-07-3092"
+2016-12-11 22:35:19 Account: 3618 Updated Record: 23174 Fields: Content="Payment", Type="Mortgage", Industry="Finance", FirstName="Freod", LastName="Flintstone", SSN="620-07-3092"
 2016-12-11 22:43:01 Account: 1783 Deleted record: 59552
 2016-12-11 22:47:55 Account: 2557 Deleted record: 86404
 2016-12-11 22:55:37 Account: 1783 Updated Record: 18397 Fields: Content="Newsletter", Title="Froglegs Weekly", Industry="Food service", FirstName="Fred", LastName="Flintstone"

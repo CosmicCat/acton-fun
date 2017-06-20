@@ -44,4 +44,4 @@ module Problem1
 end
 
 # FIXME - messy test output
-# Problem1::PermutationsCli.start(ARGV)
+Problem1::PermutationsCli.start(ARGV) unless ENV['INSIDE_TEST']
