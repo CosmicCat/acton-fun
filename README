@@ -40,7 +40,7 @@ the fly. Zipping and unzipping happen via shell calls and well-used tools. This 
 flood a disk with activity and gzip operations have the potential to consume cpu. Recommend moving or copying
 the input logfiles files to a disk not currently hosting production data to prevent io exhaustion.
 
-############# REGRETS ################
+############# IMPROVEMENTS ################
 
 There is no automated method for deployment to the target machine. The steps are well documented. I didn't budget much
 time for this as I assumed chef. I later realized that installing barebones ruby/chef on target is no longer recommendable by me.
@@ -48,6 +48,8 @@ I would recommend using ansible for this, but my ansible is stale enough for tha
 than just running the not-too-tedious steps. In the real world I would ask the team if this was acceptable solution to the
 problem given the number of nodes these tools need to be on. If it needed to be run in more than 2 places, I would ask for
 a two hour pair with a teammate to fully automate the deployment.
+
+Fault tolerance can be improved upon, especially around parsing of strings.
 
 ############ BUGS/ANNOYANCES ###############
 
@@ -72,9 +74,12 @@ git clone XXXXXX
 
 # install specific verision of ruby using rbenv (.ruby-version file determines this)
 rbenv install
-#
+
 # install bundler gem for your specific ruby version
-bundle
+gem install bundler
+
+# install gems
+bundle install
 
 ######## Testing ##############
 ## unit tests
