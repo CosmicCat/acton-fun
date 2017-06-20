@@ -48,7 +48,9 @@ module Problem2
 
   end
 
-  # Passed back from Redactor::redact
+  ## Passed back from Redactor::redact
+  ## used to be more complicated
+  ## to_s contains the log line for the new, redacted file
   class RedactionResult
     attr_reader :messages
     attr_accessor :redaction_performed, :new_log_line
@@ -64,19 +66,36 @@ module Problem2
       @messages << m
     end
 
-    # 
     def to_s
       @new_log_line
     end
   end
 
+  ## given a path, it
+  #  * finds gzipped files with a glob
+  #  * processes them line by line to redact sensitive information
+  ## requirements
+  # * original files are kept in place
+  # * creates a ./redactions directory which contain the redacted logs
+  # * creates an audit log for this procedure
   class FileHandler
     attr_reader :dir
 
+    # entry point
+    # redact each file found in the glob
+    def redact_files
+      setup_output
+      Dir.glob(@dir.to_s + '/*.gz').each do |p|
+        redact_file(p)
+      end
+    end
+
+    # dir - the location of the log files we wish to process
     def initialize(dir)
       @dir = dir
     end
 
+    # static filenames
     def temp_in
       File.join(temp_path, "in.tmp")
     end
@@ -101,13 +120,8 @@ module Problem2
       File.join(output_path, "redaction.log")
     end
 
-    def redact_files
-      setup_output
-      Dir.glob(@dir.to_s + '/*.gz').each do |p|
-        redact_file(p)
-      end
-    end
-
+    # full process for processing a single file
+    # uses tempfiles for unzipped information
     def redact_file(path)
       filename = File.basename path
       unpack_infile_into_temp_dir(path)
@@ -115,6 +129,7 @@ module Problem2
       pack_redaction_into_redaction_dir(filename)
     end
 
+    # given a file, process it for redactions
     def perform_redactions_on_file(filename)
       File.open(temp_out, 'w') do |outfile|
         lines_processed = 0
@@ -129,6 +144,7 @@ module Problem2
       end
     end
 
+    # recommend full testing before running this on logs that have already been redacted
     def setup_output
       raise "Please blow away output from previous run of this tool at: #{output_path}" if Dir.exist?(output_path)
       shell_command("mkdir #{output_path}")
@@ -147,14 +163,9 @@ module Problem2
       raise "Error executing #{cmd}" unless system(cmd)
     end
 
-    def shell_command_with_output(cmd)
-      out = `cmd`
-      raise "Error executing #{cmd}" unless $?.success
-      out
-    end
-
   end
 
+  # allow redactions of single fields in a log line
   class UpdateCreateTokenizer
     attr_accessor :log_line, :fields
 
@@ -167,17 +178,22 @@ module Problem2
       @log_line
     end
 
+    # find modifiable fieldnames
     def init_fields
+      # remove the first part of the string
       fields_snippet = log_line.gsub(/^.* Fields: /, '')
+      # split on fields
       field_strings = fields_snippet.split(/(?<=\"), /)
+      # grab the fieldnames
       @fields = field_strings.map{|f| f.gsub(/=.*/,'')}
     end
 
     def rewrite_field(fieldname, new_value)
-      # BUG - ERROR CHECKING HERE
+      # XXX - ERROR CHECKING HERE
       @log_line = @log_line.gsub(/#{fieldname}=\".*?\"/, "#{fieldname}=\"#{new_value}\"")
     end
 
+    # given list of fields to redact, will rewrite then with redacted information
     def redact(fields_to_redact)
       fields_to_redact.each do |fieldname|
         rewrite_field(fieldname, 'XXX-REDACTED-XXX')
@@ -187,6 +203,7 @@ module Problem2
 
   end
 
+  # command line processing using thor gem
   class RedactionCli < Thor
     desc "redaction -p INPUT_PATH", "Redact CC and SSN from all audit logs in given directory"
     option :path, :required => true, :aliases => :p, :desc => 'path to directory of gzipped logfiles'
