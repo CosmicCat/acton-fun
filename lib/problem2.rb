@@ -3,37 +3,43 @@
 require "logger"
 require "thor"
 
+## Redact certain strings from gzipped logfiles
 module Problem2
 
+  ## Process a single line of input and generate a redaction if necessary
   class Redactor
+
+    # modify this if you want to redact more fields
     def fields_to_redact
       ['SSN', 'CC']
     end
 
+    # entry point - give it a line of log input to be processed
+    # returns RedactionResult
     def redact(log_line)
       r = RedactionResult.new
-      r.redacted = log_line
       if should_redact?(log_line)
-        r.redacted_plus_plus()
-        r.redacted = UpdateCreateTokenizer.new(log_line).redact(fields_to_redact)
+        r.redaction_performed = true
+        r.new_log_line = UpdateCreateTokenizer.new(log_line).redact(fields_to_redact)
+      else
+        r.new_log_line = log_line
       end
       r
     end
 
-    def perform_redaction(log_line)
-      UpdateCreateTokenizer.new(log_line).redact
-    end
-
+    # given a log line, determines whether redaction is necessary
     def should_redact?(log_line)
       # cast matchdata objects to actual true and false for ease of testing
       (is_create_or_update?(log_line) && contains_dirty_fields?(log_line)) ? true : false
     end
 
+    # we only care about create or update records
     def is_create_or_update?(log_line)
-      # ignore case in the matches
+      # ignore case in the matches - example had a bunch of differing case
       log_line.match(/Account: \d+ Updated Record/i) || log_line.match(/Account: \d+ Added Record/i)
     end
 
+    # does this line contain fields we must redact?
     def contains_dirty_fields?(log_line)
       fields_with_equals = fields_to_redact.map {|f| "#{f}="}
       regex = "(#{fields_with_equals.join("|")})"
@@ -42,31 +48,25 @@ module Problem2
 
   end
 
+  # Passed back from Redactor::redact
   class RedactionResult
-    attr_reader :lines_processed, :lines_redacted, :messages, :redacted_contents
-    attr_accessor :redacted
+    attr_reader :messages
+    attr_accessor :redaction_performed, :new_log_line
 
     def initialize
-      @lines_processed = 0
-      @lines_redacted = 0
+      @redaction_performed = false
       @messages = []
-      @redacted = ''
+      @new_log_line = ''
     end
 
-    def processed_plus_plus
-      @lines_processed += 1
-    end
-
-    def redacted_plus_plus
-      @lines_redacted += 1
-    end
-
+    # not fully functional - but allows passing warnings from the tokenizer upwards
     def message(m)
       @messages << m
     end
 
+    # 
     def to_s
-      @redacted
+      @new_log_line
     end
   end
 
@@ -123,7 +123,7 @@ module Problem2
           result = Problem2::Redactor.new.redact(line)
           outfile.write(result.to_s)
           lines_processed += 1
-          lines_redacted += result.lines_redacted
+          lines_redacted += 1 if result.redaction_performed
         end
         output_log.info("Processed #{filename} - redacted #{lines_redacted}/#{lines_processed} of total lines processed")
       end

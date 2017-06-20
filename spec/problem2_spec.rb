@@ -62,19 +62,6 @@ RSpec.describe Problem2::UpdateCreateTokenizer do
 end
 
 RSpec.describe Problem2::RedactionResult do
-  it "Outputs lines processed" do
-    l = Problem2::RedactionResult.new
-    l.processed_plus_plus
-    l.processed_plus_plus
-    expect(l.lines_processed).to eq(2)
-  end
-
-  it "Outputs lines processed" do
-    l = Problem2::RedactionResult.new
-    l.redacted_plus_plus
-    l.redacted_plus_plus
-    expect(l.lines_redacted).to eq(2)
-  end
 
   it "Outputs other things you give it" do
     l = Problem2::RedactionResult.new
@@ -88,7 +75,7 @@ RSpec.describe Problem2::RedactionResult do
 
   it "looks like a string which contains the redacted log line" do
     l = Problem2::RedactionResult.new
-    l.redacted = 'foobar'
+    l.new_log_line = 'foobar'
     expect(l.to_s).to eq("foobar")
   end
 
