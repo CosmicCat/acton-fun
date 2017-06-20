@@ -10,44 +10,59 @@
 
 ################ THOUGHTS ##################
 
-Hello all - I've enjoyed working on these problems. This README contains enough information to
-run and install the solutions. I have chosen ruby as my programming language due to my proficiency.
-Testing was done on my mac as well as an ubuntu16 target machine in AWS.
+Hello all - I've enjoyed working on these problems. This README
+contains enough information to run and install the solutions. I have
+chosen ruby as my programming language due to my proficiency.  Testing
+was done on my mac as well as an ubuntu16 target machine in AWS.
 
-I've kept the code minimal and hopefully kept out a lot of ruby magic. Tests are simple for understandability,
-and were used in the development of the code.
+I've kept the code minimal and hopefully kept out a lot of ruby
+magic. Tests are simple for understandability, and were used in the
+development of the code.
 
-For ease of deployment, the solution code and classes are wrapped up into single scripts. Not too manageable if this code grows. Future iterations of this project might warrant turing it into a ruby Gem. In the real world I would have folded it into the devops tool CD pipeline.
+For ease of deployment, the solution code and classes are wrapped up
+into single scripts. Not too manageable if this code grows. Future
+iterations of this project might warrant turing it into a ruby Gem. In
+the real world I would have folded it into the devops tool CD
+pipeline.
 
-##### Problem 1:
-Borrowed the algorithm from here:
+##### Problem 1: Borrowed the algorithm from here:
 http://www.geeksforgeeks.org/write-a-c-program-to-print-all-permutations-of-a-given-string/
 
 Made it more ruby. Simplicity was my chief goal.
 
 ##### Problem 2 - design/caveats:
 
-The solution takes a directory name as input and finds all *.gz files in that directory. Slight code modification to
-make it digest any files that don't fit that input pattern.
+The solution takes a directory name as input and finds all *.gz files
+in that directory. Slight code modification to make it digest any
+files that don't fit that input pattern.
 
-The solution produces a redacted copy of every file it is able to process. It does not blow away the old files.
+The solution produces a redacted copy of every file it is able to
+process. It does not blow away the old files.
 
-New logs with redactions are stored in the redactions folder. The audit log is redactions/redaction.log.
+New logs with redactions are stored in the redactions folder. The
+audit log is redactions/redaction.log.
 
-Big risks to resource consumption are operations that have the potential to pull large files into memory.
-Parsing of files was designed to not consume memory via processing line by line. The log is written to on
-the fly. Zipping and unzipping happen via shell calls and well-used tools. This program has the potential to
-flood a disk with activity and gzip operations have the potential to consume cpu. Recommend moving or copying
-the input logfiles files to a disk not currently hosting production data to prevent io exhaustion.
+Big risks to resource consumption are operations that have the
+potential to pull large files into memory.  Parsing of files was
+designed to not consume memory via processing line by line. The log is
+written to on the fly. Zipping and unzipping happen via shell calls
+and well-used tools. This program has the potential to flood a disk
+with activity and gzip operations have the potential to consume
+cpu. Recommend moving or copying the input logfiles files to a disk
+not currently hosting production data to prevent io exhaustion.
 
 ############# IMPROVEMENTS ################
 
-There is no automated method for deployment to the target machine. The steps are well documented. I didn't budget much
-time for this as I assumed chef. I later realized that installing barebones ruby/chef on target is no longer recommendable by me.
-I would recommend using ansible for this, but my ansible is stale enough for that to take much more time to script it rather
-than just running the not-too-tedious steps. In the real world I would ask the team if this was acceptable solution to the
-problem given the number of nodes these tools need to be on. If it needed to be run in more than 2 places, I would ask for
-a two hour pair with a teammate to fully automate the deployment.
+There is no automated method for deployment to the target machine. The
+steps are well documented. I didn't budget much time for this as I
+assumed chef. I later realized that installing barebones ruby/chef on
+target is no longer recommendable by me.  I would recommend using
+ansible for this, but my ansible is stale enough for that to take much
+more time to script it rather than just running the not-too-tedious
+steps. In the real world I would ask the team if this was acceptable
+solution to the problem given the number of nodes these tools need to
+be on. If it needed to be run in more than 2 places, I would ask for a
+two hour pair with a teammate to fully automate the deployment.
 
 Fault tolerance can be improved upon, especially around parsing of strings.
 
