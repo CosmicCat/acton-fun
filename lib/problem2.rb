@@ -1,5 +1,6 @@
 require "pathname"
 require "logger"
+require "thor"
 
 module Problem2
 
@@ -164,7 +165,7 @@ module Problem2
     def to_s
       @log_line
     end
-    
+
     def init_fields
       fields_snippet = log_line.gsub(/^.* Fields: /, '')
       field_strings = fields_snippet.split(/(?<=\"), /)
@@ -182,7 +183,19 @@ module Problem2
       end
       log_line
     end
-    
+
+  end
+
+  class RedactionCli < Thor
+    desc "redaction -p INPUT_PATH", "Redact CC and SSN from all audit logs in given directory"
+    option :path, :required => true, :aliases => :p, :desc => 'path to directory of gzipped logfiles'
+    option :ignore, :aliases => :i, :desc => "filter dupes on output"
+    def redact()
+      p = Problem2::FileHandler.new(options[:path])
+      p.redact_files
+    end
   end
 
 end
+
+Problem2::RedactionCli.start(ARGV) unless ENV['INSIDE_TEST']
